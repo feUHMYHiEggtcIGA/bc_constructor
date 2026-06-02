@@ -3,13 +3,8 @@ use std::cell::RefCell;
 use bc_indicators::indicators::ready_imports::Indicator;
 use bc_utils_lg::{
     structs::settings::SETTINGS_INDS,
-    types::{
-        maps::{MAP, MAP_LINK},
-        structures::SRC_TRANSPOSE,
-    },
+    types::{maps::MAP, structures::SRC_TRANSPOSE},
 };
-
-use crate::map::indicators::*;
 
 pub fn get_indications_from_settings<'a>(
     settings: &'a SETTINGS_INDS,

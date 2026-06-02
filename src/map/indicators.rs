@@ -1,8 +1,8 @@
 use bc_indicators::indicators::ready_imports::*;
 use bc_indicators::indicators::{rma::RMA, rsi::RSI};
 use bc_utils_lg::structs::settings::{SETTINGS_IND, SETTINGS_INDS, SETTINGS_USED_SRC};
-use bc_utils_lg::types::maps::{MAP, MAP_LINK};
-use bc_utils_lg::types::structures::{SRC_EL, SRC_TRANSPOSE};
+use bc_utils_lg::types::maps::MAP;
+use bc_utils_lg::types::structures::SRC_TRANSPOSE;
 
 pub fn get_indicators_default() -> FxHashMap<&'static str, Box<dyn Indicator>> {
     FxHashMap::from_iter([
@@ -51,7 +51,6 @@ pub fn get_funcs_extract_args() -> FxHashMap<&'static str, fn(&SETTINGS_IND) -> 
             }) as fn(&SETTINGS_IND) -> Box<dyn Indicator>,
         ),
     ])
-    // FxHashMap::default()
 }
 
 pub fn get_in_from_settings<'a>(
@@ -62,25 +61,23 @@ pub fn get_in_from_settings<'a>(
     map_indicators: &MAP<&'a str, Box<dyn Indicator>>,
 ) -> Vec<Vec<f64>> {
     let mut res = vec![];
-    for used_ind_el in used_ind {
-        res.push(
-            map_indicators[settings[used_ind_el.as_str()].key.as_str()].ind_vec(
-                // recursive func
-                &get_in_from_settings(
-                    &settings[used_ind_el].used_ind,
-                    &settings[used_ind_el].used_src,
-                    settings,
-                    src,
-                    map_indicators,
-                ),
-            ),
-        );
-    }
     for used_src_el in used_src {
         res.push({
             let sk = &src[&used_src_el.key];
             sk[..sk.len() - used_src_el.sub_from_last_i].to_vec()
         });
+    }
+    for used_ind_el in used_ind {
+        res.push(map_indicators[used_ind_el.as_str()].ind_vec(
+            // recursive func
+            &get_in_from_settings(
+                &settings[used_ind_el].used_ind,
+                &settings[used_ind_el].used_src,
+                settings,
+                src,
+                map_indicators,
+            ),
+        ));
     }
     (0..res[0].len())
         .map(|v| res.iter().map(|v1| v1[v]).collect::<Vec<f64>>())

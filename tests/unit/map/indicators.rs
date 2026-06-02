@@ -1,6 +1,6 @@
-use bc_indicators::indicators::{rma::RMA, rsi::RSI};
-use bc_utils_lg::structs::settings::{SETTINGS_IND, SETTINGS_INDS, SETTINGS_USED_SRC};
-use bc_utils_lg::types::maps::{MAP, MAP_LINK};
+use bc_indicators::indicators::rsi::RSI;
+use bc_utils_lg::structs::settings::{SETTINGS_IND, SETTINGS_INDS};
+use bc_utils_lg::types::maps::MAP;
 
 use bc_constructor::map::indicators::*;
 
