@@ -1,57 +1,181 @@
+use std::sync::LazyLock;
+
 use bc_indicators::indicators::ready_imports::*;
-use bc_indicators::indicators::{rma::RMA, rsi::RSI};
+use bc_indicators::indicators::{
+    avg::AVG, div::DIV, ema::EMA, minus::MINUS, mm_scaler::MM_SCALER, mult::MULT,
+    osc_mult::OSC_MULT, percent::PERCENT, plus::PLUS, profit_factor::PROFIT_FACTOR, rem::REM,
+    rma::RMA, rsi::RSI, sma::SMA, trend_ma::TREND_MA,
+};
 use bc_utils_lg::structs::settings::{SETTINGS_IND, SETTINGS_INDS, SETTINGS_USED_SRC};
 use bc_utils_lg::types::maps::MAP;
 use bc_utils_lg::types::structures::SRC_TRANSPOSE;
 
-pub fn get_indicators_default() -> FxHashMap<&'static str, Box<dyn Indicator>> {
-    FxHashMap::from_iter([
-        ("rsi", Box::new(RSI::default()) as Box<dyn Indicator>),
-        ("rma", Box::new(RMA::default()) as Box<dyn Indicator>),
-    ])
-}
+pub static INDICATORS_DEFAULT: LazyLock<fn() -> FxHashMap<&'static str, Box<dyn Indicator>>> =
+    LazyLock::new(|| {
+        || {
+            FxHashMap::from_iter([
+                ("avg", Box::new(AVG::default()) as Box<dyn Indicator>),
+                ("div", Box::new(DIV::default()) as Box<dyn Indicator>),
+                ("ema", Box::new(EMA::default()) as Box<dyn Indicator>),
+                ("minus", Box::new(MINUS::default()) as Box<dyn Indicator>),
+                (
+                    "mm_scaler",
+                    Box::new(MM_SCALER::default()) as Box<dyn Indicator>,
+                ),
+                ("mult", Box::new(MULT::default()) as Box<dyn Indicator>),
+                (
+                    "osc_mult",
+                    Box::new(OSC_MULT::default()) as Box<dyn Indicator>,
+                ),
+                (
+                    "percent",
+                    Box::new(PERCENT::default()) as Box<dyn Indicator>,
+                ),
+                ("plus", Box::new(PLUS::default()) as Box<dyn Indicator>),
+                (
+                    "profit_factor",
+                    Box::new(PROFIT_FACTOR::default()) as Box<dyn Indicator>,
+                ),
+                ("rem", Box::new(REM::default()) as Box<dyn Indicator>),
+                ("rma", Box::new(RMA::default()) as Box<dyn Indicator>),
+                ("rsi", Box::new(RSI::default()) as Box<dyn Indicator>),
+                ("sma", Box::new(SMA::default()) as Box<dyn Indicator>),
+                (
+                    "trend_ma",
+                    Box::new(TREND_MA::default()) as Box<dyn Indicator>,
+                ),
+            ])
+        }
+    });
 
-pub fn get_funcs_extract_args() -> FxHashMap<&'static str, fn(&SETTINGS_IND) -> Box<dyn Indicator>>
-{
-    FxHashMap::from_iter([
-        (
-            "rsi",
-            (|v: &SETTINGS_IND| {
-                let mut df = RSI::default();
-                df.set_window(*v.kwargs_usize.get("window").unwrap_or(&df.window));
-                df.set_mult_window_accuracy(
-                    *v.kwargs_usize
-                        .get("mult_window_accuracy")
-                        .unwrap_or(&df.mult_window_accuracy),
-                );
-                df.set_add_window_accuracy(
-                    *v.kwargs_usize
-                        .get("add_window_accuracy")
-                        .unwrap_or(&df.add_window_accuracy),
-                );
-                Box::new(df) as Box<dyn Indicator>
-            }) as fn(&SETTINGS_IND) -> Box<dyn Indicator>,
-        ),
-        (
-            "rma",
-            (|v: &SETTINGS_IND| {
-                let mut df = RMA::default();
-                df.set_window(*v.kwargs_usize.get("window").unwrap_or(&df.window));
-                df.set_mult_window_accuracy(
-                    *v.kwargs_usize
-                        .get("mult_window_accuracy")
-                        .unwrap_or(&df.mult_window_accuracy),
-                );
-                df.set_add_window_accuracy(
-                    *v.kwargs_usize
-                        .get("add_window_accuracy")
-                        .unwrap_or(&df.add_window_accuracy),
-                );
-                Box::new(df) as Box<dyn Indicator>
-            }) as fn(&SETTINGS_IND) -> Box<dyn Indicator>,
-        ),
-    ])
-}
+pub static FUNCS_EXTRACT_ARGS: LazyLock<
+    fn() -> FxHashMap<&'static str, fn(&SETTINGS_IND) -> Box<dyn Indicator>>,
+> = LazyLock::new(|| {
+    || {
+        FxHashMap::from_iter([
+            (
+                "rsi",
+                (|v: &SETTINGS_IND| {
+                    let mut df = RSI::default();
+                    df.set_window(*v.kwargs_usize.get("window").unwrap_or(&df.window));
+                    df.set_mult_window_accuracy(
+                        *v.kwargs_usize
+                            .get("mult_window_accuracy")
+                            .unwrap_or(&df.mult_window_accuracy),
+                    );
+                    df.set_add_window_accuracy(
+                        *v.kwargs_usize
+                            .get("add_window_accuracy")
+                            .unwrap_or(&df.add_window_accuracy),
+                    );
+                    Box::new(df) as Box<dyn Indicator>
+                }) as fn(&SETTINGS_IND) -> Box<dyn Indicator>,
+            ),
+            (
+                "rma",
+                (|v: &SETTINGS_IND| {
+                    let mut df = RMA::default();
+                    df.set_window(*v.kwargs_usize.get("window").unwrap_or(&df.window));
+                    df.set_mult_window_accuracy(
+                        *v.kwargs_usize
+                            .get("mult_window_accuracy")
+                            .unwrap_or(&df.mult_window_accuracy),
+                    );
+                    df.set_add_window_accuracy(
+                        *v.kwargs_usize
+                            .get("add_window_accuracy")
+                            .unwrap_or(&df.add_window_accuracy),
+                    );
+                    Box::new(df) as Box<dyn Indicator>
+                }) as fn(&SETTINGS_IND) -> Box<dyn Indicator>,
+            ),
+            (
+                "ema",
+                (|v: &SETTINGS_IND| {
+                    let mut df = EMA::default();
+                    df.set_window(*v.kwargs_usize.get("window").unwrap_or(&df.window));
+                    df.set_mult_window_accuracy(
+                        *v.kwargs_usize
+                            .get("mult_window_accuracy")
+                            .unwrap_or(&df.mult_window_accuracy),
+                    );
+                    df.set_add_window_accuracy(
+                        *v.kwargs_usize
+                            .get("add_window_accuracy")
+                            .unwrap_or(&df.add_window_accuracy),
+                    );
+                    Box::new(df) as Box<dyn Indicator>
+                }) as fn(&SETTINGS_IND) -> Box<dyn Indicator>,
+            ),
+            (
+                "sma",
+                (|v: &SETTINGS_IND| {
+                    let mut df = SMA::default();
+                    df.set_window(*v.kwargs_usize.get("window").unwrap_or(&df.window));
+                    Box::new(df) as Box<dyn Indicator>
+                }) as fn(&SETTINGS_IND) -> Box<dyn Indicator>,
+            ),
+            (
+                "avg",
+                (|_: &SETTINGS_IND| Box::new(AVG::default()) as Box<dyn Indicator>)
+                    as fn(&SETTINGS_IND) -> Box<dyn Indicator>,
+            ),
+            (
+                "mm_scaler",
+                (|v: &SETTINGS_IND| {
+                    let mut df = MM_SCALER::default();
+                    df.set_window(*v.kwargs_usize.get("window").unwrap_or(&df.window));
+                    Box::new(df) as Box<dyn Indicator>
+                }) as fn(&SETTINGS_IND) -> Box<dyn Indicator>,
+            ),
+            (
+                "osc_mult",
+                (|v: &SETTINGS_IND| {
+                    let mut df = OSC_MULT::default();
+                    df.set_diff_short(*v.kwargs_f64.get("diff_short").unwrap_or(&df.diff_short));
+                    df.set_diff_long(*v.kwargs_f64.get("diff_long").unwrap_or(&df.diff_long));
+                    df.set_max_v(*v.kwargs_f64.get("max_v").unwrap_or(&df.max_v));
+                    Box::new(df) as Box<dyn Indicator>
+                }) as fn(&SETTINGS_IND) -> Box<dyn Indicator>,
+            ),
+            (
+                "percent",
+                (|_: &SETTINGS_IND| Box::new(PERCENT::default()) as Box<dyn Indicator>)
+                    as fn(&SETTINGS_IND) -> Box<dyn Indicator>,
+            ),
+            (
+                "trend_ma",
+                (|_: &SETTINGS_IND| Box::new(TREND_MA::default()) as Box<dyn Indicator>)
+                    as fn(&SETTINGS_IND) -> Box<dyn Indicator>,
+            ),
+            (
+                "minus",
+                (|_: &SETTINGS_IND| Box::new(MINUS::default()) as Box<dyn Indicator>)
+                    as fn(&SETTINGS_IND) -> Box<dyn Indicator>,
+            ),
+            (
+                "plus",
+                (|_: &SETTINGS_IND| Box::new(PLUS::default()) as Box<dyn Indicator>)
+                    as fn(&SETTINGS_IND) -> Box<dyn Indicator>,
+            ),
+            (
+                "mult",
+                (|_: &SETTINGS_IND| Box::new(MULT::default()) as Box<dyn Indicator>)
+                    as fn(&SETTINGS_IND) -> Box<dyn Indicator>,
+            ),
+            (
+                "div",
+                (|_: &SETTINGS_IND| Box::new(DIV::default()) as Box<dyn Indicator>)
+                    as fn(&SETTINGS_IND) -> Box<dyn Indicator>,
+            ),
+            (
+                "rem",
+                (|_: &SETTINGS_IND| Box::new(REM::default()) as Box<dyn Indicator>)
+                    as fn(&SETTINGS_IND) -> Box<dyn Indicator>,
+            ),
+        ])
+    }
+});
 
 pub fn get_in_from_settings<'a>(
     used_ind: &Vec<String>,
@@ -79,7 +203,16 @@ pub fn get_in_from_settings<'a>(
             ),
         ));
     }
-    (0..res[0].len())
+    let min_len = res
+        .iter()
+        .map(|v| v.len())
+        .min()
+        .expect("this is nan or wtf");
+    res = res
+        .into_iter()
+        .map(|v| v[v.len() - min_len..].to_vec())
+        .collect::<Vec<Vec<f64>>>();
+    (0..min_len)
         .map(|v| res.iter().map(|v1| v1[v]).collect::<Vec<f64>>())
         .collect::<Vec<Vec<f64>>>()
 }
@@ -102,7 +235,13 @@ pub fn get_indicators_from_settings<'a>(
     funcs_extract_args: &FxHashMap<&'a str, fn(&SETTINGS_IND) -> Box<dyn Indicator>>,
     in_: &SRC_TRANSPOSE,
     map_indicators: &MAP<&'a str, Box<dyn Indicator>>,
-) -> MAP<&'a str, (RefCell<Vec<MAP<&'static str, f64>>>, Box<dyn Indicator>)> {
+) -> MAP<
+    &'a str,
+    (
+        RefCell<Vec<MAP<&'static str, Vec<f64>>>>,
+        Box<dyn Indicator>,
+    ),
+> {
     settings
         .iter()
         .map(|(indicator_name, settings_indicator)| {

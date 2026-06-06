@@ -9,7 +9,13 @@ use bc_utils_lg::{
 pub fn get_indications_from_settings<'a>(
     settings: &'a SETTINGS_INDS,
     buffer_in: &SRC_TRANSPOSE,
-    map_indicators: &MAP<&'a str, (RefCell<Vec<MAP<&'static str, f64>>>, Box<dyn Indicator>)>,
+    map_indicators: &MAP<
+        &'a str,
+        (
+            RefCell<Vec<MAP<&'static str, Vec<f64>>>>,
+            Box<dyn Indicator>,
+        ),
+    >,
 ) -> MAP<&'a str, f64> {
     settings.iter().fold(MAP::default(), |mut map, setting| {
         let key_uniq_str = setting.0.as_str();

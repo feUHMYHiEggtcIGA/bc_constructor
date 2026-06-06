@@ -19,7 +19,7 @@ fn indicators_from_settings_res_1() {
             used_ind: vec![],
         },
     )]);
-    let funcs_extract_args = get_funcs_extract_args();
+    let funcs_extract_args = FUNCS_EXTRACT_ARGS();
     let res = get_indicators_from_settings_without_bf(&settings, &funcs_extract_args);
     let res_1 = res.get("rsi_1").unwrap().as_ref();
     let rsi_test_1 = RSI::new(10);
