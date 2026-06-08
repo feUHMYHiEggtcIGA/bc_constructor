@@ -22,7 +22,7 @@ pub fn get_indications_from_settings<'a>(
         let mut src_arg = vec![];
         for us_el in &setting.1.used_src {
             src_arg.push({
-                let sk = &buffer_in[&us_el.key];
+                let sk = &buffer_in[us_el.index];
                 sk[sk.len() - 1 - us_el.sub_from_last_i]
             });
         }

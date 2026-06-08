@@ -22,7 +22,7 @@ static SETTINGS_1: LazyLock<SETTINGS_INDS> = LazyLock::new(|| {
             kwargs_usize: MAP::from_iter([("window".to_string(), 2)]),
             kwargs_f64: MAP::default(),
             kwargs_string: MAP::default(),
-            used_src: vec![SETTINGS_USED_SRC { key: "open".to_string(), sub_from_last_i: 0 }],
+            used_src: vec![SETTINGS_USED_SRC { index: 0, sub_from_last_i: 0 }],
             used_ind: vec![],
         },
     )])
@@ -38,10 +38,10 @@ static SETTINGS_2: LazyLock<SETTINGS_INDS> = LazyLock::new(|| {
                 kwargs_f64: MAP::default(),
                 kwargs_string: MAP::default(),
                 used_src: vec![
-                    SETTINGS_USED_SRC { key: "open".to_string(), sub_from_last_i: 0 },
-                    SETTINGS_USED_SRC { key: "high".to_string(), sub_from_last_i: 1 },
-                    SETTINGS_USED_SRC { key: "low".to_string(), sub_from_last_i: 1 },
-                    SETTINGS_USED_SRC { key: "close".to_string(), sub_from_last_i: 1 },
+                    SETTINGS_USED_SRC { index: 0, sub_from_last_i: 0 },
+                    SETTINGS_USED_SRC { index: 1, sub_from_last_i: 1 },
+                    SETTINGS_USED_SRC { index: 2, sub_from_last_i: 1 },
+                    SETTINGS_USED_SRC { index: 3, sub_from_last_i: 1 },
                 ],
                 used_ind: vec![],
             },

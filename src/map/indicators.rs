@@ -187,7 +187,7 @@ pub fn get_in_from_settings<'a>(
     let mut res = vec![];
     for used_src_el in used_src {
         res.push({
-            let sk = &src[&used_src_el.key];
+            let sk = &src[used_src_el.index];
             sk[..sk.len() - used_src_el.sub_from_last_i].to_vec()
         });
     }
@@ -254,8 +254,8 @@ pub fn get_indicators_from_settings<'a>(
                         &settings_indicator.used_src,
                         settings,
                         &in_.into_iter()
-                            .map(|(v1, v2)| (v1.clone(), v2[..v2.len() - 1].to_vec()))
-                            .collect::<MAP<String, Vec<f64>>>(),
+                            .map(|v| v[..v.len() - 1].to_vec())
+                            .collect::<Vec<Vec<f64>>>(),
                         map_indicators,
                     )),
                     indicator,
