@@ -1,6 +1,7 @@
 use std::sync::LazyLock;
 
 use bc_indicators::indicators::ready_imports::*;
+use bc_indicators::indicators::repeat::REPEAT;
 use bc_indicators::indicators::{
     avg::AVG, div::DIV, ema::EMA, minus::MINUS, mm_scaler::MM_SCALER, mult::MULT,
     osc_mult::OSC_MULT, percent::PERCENT, plus::PLUS, profit_factor::PROFIT_FACTOR, rem::REM,
@@ -15,35 +16,21 @@ pub static INDICATORS_DEFAULT: LazyLock<fn() -> FxHashMap<&'static str, Box<dyn 
         || {
             FxHashMap::from_iter([
                 ("avg", Box::new(AVG::default()) as Box<dyn Indicator>),
-                ("div", Box::new(DIV::default()) as Box<dyn Indicator>),
-                ("ema", Box::new(EMA::default()) as Box<dyn Indicator>),
-                ("minus", Box::new(MINUS::default()) as Box<dyn Indicator>),
-                (
-                    "mm_scaler",
-                    Box::new(MM_SCALER::default()) as Box<dyn Indicator>,
-                ),
-                ("mult", Box::new(MULT::default()) as Box<dyn Indicator>),
-                (
-                    "osc_mult",
-                    Box::new(OSC_MULT::default()) as Box<dyn Indicator>,
-                ),
-                (
-                    "percent",
-                    Box::new(PERCENT::default()) as Box<dyn Indicator>,
-                ),
-                ("plus", Box::new(PLUS::default()) as Box<dyn Indicator>),
-                (
-                    "profit_factor",
-                    Box::new(PROFIT_FACTOR::default()) as Box<dyn Indicator>,
-                ),
-                ("rem", Box::new(REM::default()) as Box<dyn Indicator>),
-                ("rma", Box::new(RMA::default()) as Box<dyn Indicator>),
-                ("rsi", Box::new(RSI::default()) as Box<dyn Indicator>),
-                ("sma", Box::new(SMA::default()) as Box<dyn Indicator>),
-                (
-                    "trend_ma",
-                    Box::new(TREND_MA::default()) as Box<dyn Indicator>,
-                ),
+                ("div", Box::new(DIV::default())),
+                ("ema", Box::new(EMA::default())),
+                ("minus", Box::new(MINUS::default())),
+                ("mm_scaler", Box::new(MM_SCALER::default())),
+                ("mult", Box::new(MULT::default())),
+                ("osc_mult", Box::new(OSC_MULT::default())),
+                ("percent", Box::new(PERCENT::default())),
+                ("plus", Box::new(PLUS::default())),
+                ("profit_factor", Box::new(PROFIT_FACTOR::default())),
+                ("rem", Box::new(REM::default())),
+                ("rma", Box::new(RMA::default())),
+                ("rsi", Box::new(RSI::default())),
+                ("sma", Box::new(SMA::default())),
+                ("trend_ma", Box::new(TREND_MA::default())),
+                ("repeat", Box::new(REPEAT::default())),
             ])
         }
     });
@@ -172,6 +159,14 @@ pub static FUNCS_EXTRACT_ARGS: LazyLock<
                 "rem",
                 (|_: &SETTINGS_IND| Box::new(REM::default()) as Box<dyn Indicator>)
                     as fn(&SETTINGS_IND) -> Box<dyn Indicator>,
+            ),
+            (
+                "repeat",
+                (|v: &SETTINGS_IND| {
+                    let mut df = REPEAT::default();
+                    df.set_value(*v.kwargs_f64.get("value").unwrap_or(&df.value));
+                    Box::new(df) as Box<dyn Indicator>
+                }) as fn(&SETTINGS_IND) -> Box<dyn Indicator>,
             ),
         ])
     }

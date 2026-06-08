@@ -7,11 +7,9 @@ use bc_utils_lg::{
 };
 use criterion::{Criterion, criterion_group, criterion_main};
 
-use bc_constructor::{
-    indicators::get_indications_from_settings,
-    map::indicators::{
-        FUNCS_EXTRACT_ARGS, get_indicators_from_settings, get_indicators_from_settings_without_bf,
-    },
+use bc_constructor::indicators::IndicatorsGateway;
+use bc_constructor::map::indicators::{
+    FUNCS_EXTRACT_ARGS, get_indicators_from_settings, get_indicators_from_settings_without_bf,
 };
 
 static SETTINGS_1: LazyLock<SETTINGS_INDS> = LazyLock::new(|| {
@@ -72,30 +70,38 @@ static SETTINGS_2: LazyLock<SETTINGS_INDS> = LazyLock::new(|| {
 });
 
 fn get_indications_from_settings_1(c: &mut Criterion) {
-    let indicators_no_bf =
+    let ind_without_bf =
         get_indicators_from_settings_without_bf(&SETTINGS_1, &FUNCS_EXTRACT_ARGS());
-    let indicators = get_indicators_from_settings(
+    let indicators_gw = IndicatorsGateway::new(
+        get_indicators_from_settings(
+            &SETTINGS_1,
+            &FUNCS_EXTRACT_ARGS(),
+            &SRC_TRANSPOSE,
+            &ind_without_bf,
+        ),
+        ind_without_bf,
         &SETTINGS_1,
-        &FUNCS_EXTRACT_ARGS(),
-        &SRC_TRANSPOSE,
-        &indicators_no_bf,
     );
     c.bench_function("get_indications_from_settings_1", |b| {
-        b.iter(|| get_indications_from_settings(&SETTINGS_1, &SRC_TRANSPOSE, &indicators))
+        b.iter(|| indicators_gw.get_indications_from_settings(&SRC_TRANSPOSE))
     });
 }
 
 fn get_indications_from_settings_2(c: &mut Criterion) {
-    let indicators_no_bf =
+    let ind_without_bf =
         get_indicators_from_settings_without_bf(&SETTINGS_2, &FUNCS_EXTRACT_ARGS());
-    let indicators = get_indicators_from_settings(
+    let indicators_gw = IndicatorsGateway::new(
+        get_indicators_from_settings(
+            &SETTINGS_2,
+            &FUNCS_EXTRACT_ARGS(),
+            &SRC_TRANSPOSE,
+            &ind_without_bf,
+        ),
+        ind_without_bf,
         &SETTINGS_2,
-        &FUNCS_EXTRACT_ARGS(),
-        &SRC_TRANSPOSE,
-        &indicators_no_bf,
     );
     c.bench_function("get_indications_from_settings_2", |b| {
-        b.iter(|| get_indications_from_settings(&SETTINGS_2, &SRC_TRANSPOSE, &indicators))
+        b.iter(|| indicators_gw.get_indications_from_settings(&SRC_TRANSPOSE))
     });
 }
 
