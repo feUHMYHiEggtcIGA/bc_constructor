@@ -203,18 +203,21 @@ pub fn get_in_from_settings<'a>(
     if order_used.len() != 0 {
         res = order_used.iter().map(|i| res[*i].clone()).collect();
     }
-    let min_len = res
-        .iter()
-        .map(|v| v.len())
-        .min()
-        .expect("this is nan or wtf");
-    res = res
-        .into_iter()
-        .map(|v| v[v.len() - min_len..].to_vec())
-        .collect::<Vec<Vec<f64>>>();
-    (0..min_len)
-        .map(|v| res.iter().map(|v1| v1[v]).collect::<Vec<f64>>())
-        .collect::<Vec<Vec<f64>>>()
+    if res.len() != 0 {
+        let min_len = res
+            .iter()
+            .map(|v| v.len())
+            .min()
+            .expect("this is nan or wtf");
+        res = res
+            .into_iter()
+            .map(|v| v[v.len() - min_len..].to_vec())
+            .collect::<Vec<Vec<f64>>>();
+        return (0..min_len)
+            .map(|v| res.iter().map(|v1| v1[v]).collect::<Vec<f64>>())
+            .collect::<Vec<Vec<f64>>>();
+    }
+    Default::default()
 }
 
 pub fn get_indicators_from_settings_without_bf<'a>(

@@ -50,6 +50,31 @@ fn indication_res_1() {
                 order_used: vec![],
             },
         ),
+        (
+            "repeat_1".to_string(),
+            SETTINGS_IND {
+                key: "repeat".to_string(),
+                kwargs_f64: MAP::from_iter([("value".to_string(), 1.0)]),
+                ..Default::default()
+            },
+        ),
+        (
+            "repeat_2".to_string(),
+            SETTINGS_IND {
+                key: "repeat".to_string(),
+                kwargs_f64: MAP::from_iter([("value".to_string(), 2.0)]),
+                ..Default::default()
+            },
+        ),
+        (
+            "minus_1".to_string(),
+            SETTINGS_IND {
+                key: "minus".to_string(),
+                used_ind: vec!["repeat_1".to_string(), "repeat_2".to_string()],
+                order_used: vec![1, 0],
+                ..Default::default()
+            },
+        ),
     ]);
     let ind_without_bf = get_indicators_from_settings_without_bf(&settings, &FUNCS_EXTRACT_ARGS());
     let indicators_gw = IndicatorsGateway::new(
@@ -73,24 +98,23 @@ fn indication_res_1() {
         + OPEN_LAST)
         / 3.;
     assert_eq!(round_f(res_1["avg_1"], &4,), round_f(res_2, &4,),);
+    assert_eq!(res_1["minus_1"], 1.0);
 }
 
 #[test]
 fn indications_vec_res_1() {
-    let settings = SETTINGS_INDS::from_iter([
-        (
-            "rsi_1".to_string(),
-            SETTINGS_IND {
-                key: "rsi".to_string(),
-                kwargs_usize: MAP::from_iter([("window".to_string(), 2)]),
-                kwargs_f64: MAP::default(),
-                kwargs_string: MAP::default(),
-                used_src: vec![SETTINGS_USED_SRC { index: 0, sub_from_last_i: 0 }],
-                used_ind: vec![],
-                order_used: vec![],
-            },
-        ),
-    ]);
+    let settings = SETTINGS_INDS::from_iter([(
+        "rsi_1".to_string(),
+        SETTINGS_IND {
+            key: "rsi".to_string(),
+            kwargs_usize: MAP::from_iter([("window".to_string(), 2)]),
+            kwargs_f64: MAP::default(),
+            kwargs_string: MAP::default(),
+            used_src: vec![SETTINGS_USED_SRC { index: 0, sub_from_last_i: 0 }],
+            used_ind: vec![],
+            order_used: vec![],
+        },
+    )]);
     let ind_without_bf = get_indicators_from_settings_without_bf(&settings, &FUNCS_EXTRACT_ARGS());
     let indicators_gw = IndicatorsGateway::new(
         get_indicators_from_settings(
@@ -104,5 +128,8 @@ fn indications_vec_res_1() {
     );
     let res_1 = indicators_gw.get_indications_vec_from_settings(&SRC_TRANSPOSE)["rsi_1"].clone();
     let res_2 = RSI::new(2).ind_vec(&SRC_NOMAP);
-    assert_eq!(coll_nz::<Vec<f64>, _, _,>(&res_1, 0.0), coll_nz::<Vec<f64>, _, _,>(&res_2, 0.0));
+    assert_eq!(
+        coll_nz::<Vec<f64>, _, _>(&res_1, 0.0),
+        coll_nz::<Vec<f64>, _, _>(&res_2, 0.0)
+    );
 }

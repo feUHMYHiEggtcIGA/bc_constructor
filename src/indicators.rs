@@ -53,6 +53,9 @@ impl<'a> IndicatorsGateway<'a> {
                 for ui_el in &setting.1.used_ind {
                     src_arg.push(map[ui_el.as_str()]);
                 }
+                if setting.1.order_used.len() != 0 {
+                    src_arg = setting.1.order_used.iter().map(|i| src_arg[*i]).collect();
+                }
                 let indicator = &self.indicators[key_uniq_str];
                 map.insert(
                     key_uniq_str,
