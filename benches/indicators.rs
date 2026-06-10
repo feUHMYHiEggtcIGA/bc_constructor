@@ -83,7 +83,7 @@ fn get_indications_from_settings_1(c: &mut Criterion) {
             &SRC_TRANSPOSE,
             &ind_without_bf,
         ),
-        ind_without_bf,
+        &ind_without_bf,
         &SETTINGS_1,
     );
     c.bench_function("get_indications_from_settings_1", |b| {
@@ -101,7 +101,7 @@ fn get_indications_from_settings_2(c: &mut Criterion) {
             &SRC_TRANSPOSE,
             &ind_without_bf,
         ),
-        ind_without_bf,
+        &ind_without_bf,
         &SETTINGS_2,
     );
     c.bench_function("get_indications_from_settings_2", |b| {

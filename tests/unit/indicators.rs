@@ -84,7 +84,7 @@ fn indication_res_1() {
             &SRC_TRANSPOSE,
             &ind_without_bf,
         ),
-        ind_without_bf,
+        &ind_without_bf,
         &settings,
     );
     let res_1 = indicators_gw.get_indications_from_settings(&SRC_TRANSPOSE);
@@ -123,7 +123,7 @@ fn indications_vec_res_1() {
             &SRC_TRANSPOSE,
             &ind_without_bf,
         ),
-        ind_without_bf,
+        &ind_without_bf,
         &settings,
     );
     let res_1 = indicators_gw.get_indications_vec_from_settings(&SRC_TRANSPOSE)["rsi_1"].clone();

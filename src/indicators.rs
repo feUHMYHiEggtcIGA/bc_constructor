@@ -17,7 +17,7 @@ pub struct IndicatorsGateway<'a> {
             Box<dyn Indicator>,
         ),
     >,
-    pub indicators_without_bf: MAP<&'a str, Box<dyn Indicator>>,
+    pub indicators_without_bf: &'a MAP<&'a str, Box<dyn Indicator>>,
     pub settings: &'a SETTINGS_INDS,
 }
 
@@ -30,7 +30,7 @@ impl<'a> IndicatorsGateway<'a> {
                 Box<dyn Indicator>,
             ),
         >,
-        indicators_without_bf: MAP<&'a str, Box<dyn Indicator>>,
+        indicators_without_bf: &'a MAP<&'a str, Box<dyn Indicator>>,
         settings: &'a SETTINGS_INDS,
     ) -> Self {
         Self { indicators, indicators_without_bf, settings }
