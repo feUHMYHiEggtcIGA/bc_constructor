@@ -175,6 +175,7 @@ pub static FUNCS_EXTRACT_ARGS: LazyLock<
 pub fn get_in_from_settings<'a>(
     used_ind: &Vec<String>,
     used_src: &Vec<SETTINGS_USED_SRC>,
+    order_used: &Vec<usize>,
     settings: &SETTINGS_INDS,
     src: &SRC_TRANSPOSE,
     map_indicators: &MAP<&'a str, Box<dyn Indicator>>,
@@ -192,11 +193,15 @@ pub fn get_in_from_settings<'a>(
             &get_in_from_settings(
                 &settings[used_ind_el].used_ind,
                 &settings[used_ind_el].used_src,
+                &settings[used_ind_el].order_used,
                 settings,
                 src,
                 map_indicators,
             ),
         ));
+    }
+    if order_used.len() != 0 {
+        res = order_used.iter().map(|i| res[*i].clone()).collect();
     }
     let min_len = res
         .iter()
@@ -247,6 +252,7 @@ pub fn get_indicators_from_settings<'a>(
                     indicator.bf(&get_in_from_settings(
                         &settings_indicator.used_ind,
                         &settings_indicator.used_src,
+                        &settings_indicator.order_used,
                         settings,
                         &in_.into_iter()
                             .map(|v| v[..v.len() - 1].to_vec())

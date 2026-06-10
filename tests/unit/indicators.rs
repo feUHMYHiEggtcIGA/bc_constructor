@@ -20,6 +20,7 @@ fn indication_res_1() {
                 kwargs_string: MAP::default(),
                 used_src: vec![SETTINGS_USED_SRC { index: 0, sub_from_last_i: 0 }],
                 used_ind: vec![],
+                order_used: vec![],
             },
         ),
         (
@@ -31,6 +32,7 @@ fn indication_res_1() {
                 kwargs_string: MAP::default(),
                 used_src: vec![],
                 used_ind: vec!["rsi_1".to_string()],
+                order_used: vec![],
             },
         ),
         (
@@ -45,6 +47,7 @@ fn indication_res_1() {
                     SETTINGS_USED_SRC { index: 3, sub_from_last_i: 2 },
                 ],
                 used_ind: vec!["rma_1".to_string()],
+                order_used: vec![],
             },
         ),
     ]);
@@ -84,6 +87,7 @@ fn indications_vec_res_1() {
                 kwargs_string: MAP::default(),
                 used_src: vec![SETTINGS_USED_SRC { index: 0, sub_from_last_i: 0 }],
                 used_ind: vec![],
+                order_used: vec![],
             },
         ),
     ]);

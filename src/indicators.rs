@@ -75,6 +75,7 @@ impl<'a> IndicatorsGateway<'a> {
                     indicator.1.ind_vec(&get_in_from_settings(
                         &setting.used_ind,
                         &setting.used_src,
+                        &setting.order_used,
                         &self.settings,
                         src,
                         &self.indicators_without_bf,

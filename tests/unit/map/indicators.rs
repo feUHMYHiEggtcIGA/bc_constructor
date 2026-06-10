@@ -17,6 +17,7 @@ fn indicators_from_settings_res_1() {
             kwargs_string: MAP::default(),
             used_src: vec![],
             used_ind: vec![],
+            order_used: vec![],
         },
     )]);
     let funcs_extract_args = FUNCS_EXTRACT_ARGS();
