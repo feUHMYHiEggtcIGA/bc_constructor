@@ -77,16 +77,13 @@ fn indication_res_1() {
         ),
     ]);
     let ind_without_bf = get_indicators_from_settings_without_bf(&settings, &FUNCS_EXTRACT_ARGS());
-    let indicators_gw = IndicatorsGateway::new(
-        get_indicators_from_settings(
-            &settings,
-            &FUNCS_EXTRACT_ARGS(),
-            &SRC_TRANSPOSE,
-            &ind_without_bf,
-        ),
-        &ind_without_bf,
+    let ind_bf = get_indicators_from_settings(
         &settings,
+        &FUNCS_EXTRACT_ARGS(),
+        &SRC_TRANSPOSE,
+        &ind_without_bf,
     );
+    let indicators_gw = IndicatorsGateway::new(&ind_bf, &ind_without_bf, &settings);
     let res_1 = indicators_gw.get_indications_from_settings(&SRC_TRANSPOSE);
     let res_2 = (RMA::new(2).ind_f(
         &RSI::new(2)
@@ -116,16 +113,13 @@ fn indications_vec_res_1() {
         },
     )]);
     let ind_without_bf = get_indicators_from_settings_without_bf(&settings, &FUNCS_EXTRACT_ARGS());
-    let indicators_gw = IndicatorsGateway::new(
-        get_indicators_from_settings(
-            &settings,
-            &FUNCS_EXTRACT_ARGS(),
-            &SRC_TRANSPOSE,
-            &ind_without_bf,
-        ),
-        &ind_without_bf,
+    let ind_bf = get_indicators_from_settings(
         &settings,
+        &FUNCS_EXTRACT_ARGS(),
+        &SRC_TRANSPOSE,
+        &ind_without_bf,
     );
+    let indicators_gw = IndicatorsGateway::new(&ind_bf, &ind_without_bf, &settings);
     let res_1 = indicators_gw.get_indications_vec_from_settings(&SRC_TRANSPOSE)["rsi_1"].clone();
     let res_2 = RSI::new(2).ind_vec(&SRC_NOMAP);
     assert_eq!(

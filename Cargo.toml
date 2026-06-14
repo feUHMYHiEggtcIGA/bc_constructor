@@ -11,11 +11,17 @@ bc_utils_lg = {path = "../bc_utils_lg"}
 bc_indicators = {path = "../bc_indicators"}
 bc_exch_api_funcs = {path = "../bc_exch_api_funcs"}
 bc_utils = {path = "../bc_utils"}
+bc_signals = {path = "../bc_signals"}
 
 [dev-dependencies]
 criterion = {version ="0.3.5", features = ["html_reports"]}
 
 [[bench]]
-name = "get_indications_from_settings"
+name = "indicators"
 harness = false
 path = "benches/indicators.rs"
+
+[[bench]]
+name = "signals_ready"
+harness = false
+path = "benches/signals_ready.rs"

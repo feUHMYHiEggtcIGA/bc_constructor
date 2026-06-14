@@ -1,5 +1,3 @@
-use std::sync::LazyLock;
-
 use bc_utils_lg::statics::prices::SRC_TRANSPOSE;
 use bc_utils_lg::{
     structs::settings::{SETTINGS_IND, SETTINGS_INDS, SETTINGS_USED_SRC},
@@ -12,8 +10,8 @@ use bc_constructor::map::indicators::{
     FUNCS_EXTRACT_ARGS, get_indicators_from_settings, get_indicators_from_settings_without_bf,
 };
 
-static SETTINGS_1: LazyLock<SETTINGS_INDS> = LazyLock::new(|| {
-    SETTINGS_INDS::from_iter([(
+fn get_indications_from_settings_1(c: &mut Criterion) {
+    let s = SETTINGS_INDS::from_iter([(
         "rsi_1".to_string(),
         SETTINGS_IND {
             key: "rsi".to_string(),
@@ -24,11 +22,18 @@ static SETTINGS_1: LazyLock<SETTINGS_INDS> = LazyLock::new(|| {
             used_ind: vec![],
             order_used: vec![],
         },
-    )])
-});
+    )]);
+    let ind_without_bf = get_indicators_from_settings_without_bf(&s, &FUNCS_EXTRACT_ARGS());
+    let ind_bf =
+        get_indicators_from_settings(&s, &FUNCS_EXTRACT_ARGS(), &SRC_TRANSPOSE, &ind_without_bf);
+    let indicators_gw = IndicatorsGateway::new(&ind_bf, &ind_without_bf, &s);
+    c.bench_function("get_indications_from_settings_1", |b| {
+        b.iter(|| indicators_gw.get_indications_from_settings(&SRC_TRANSPOSE))
+    });
+}
 
-static SETTINGS_2: LazyLock<SETTINGS_INDS> = LazyLock::new(|| {
-    SETTINGS_INDS::from_iter([
+fn get_indications_from_settings_2(c: &mut Criterion) {
+    let s = SETTINGS_INDS::from_iter([
         (
             "avg_1".to_string(),
             SETTINGS_IND {
@@ -70,40 +75,11 @@ static SETTINGS_2: LazyLock<SETTINGS_INDS> = LazyLock::new(|| {
                 order_used: vec![],
             },
         ),
-    ])
-});
-
-fn get_indications_from_settings_1(c: &mut Criterion) {
-    let ind_without_bf =
-        get_indicators_from_settings_without_bf(&SETTINGS_1, &FUNCS_EXTRACT_ARGS());
-    let indicators_gw = IndicatorsGateway::new(
-        get_indicators_from_settings(
-            &SETTINGS_1,
-            &FUNCS_EXTRACT_ARGS(),
-            &SRC_TRANSPOSE,
-            &ind_without_bf,
-        ),
-        &ind_without_bf,
-        &SETTINGS_1,
-    );
-    c.bench_function("get_indications_from_settings_1", |b| {
-        b.iter(|| indicators_gw.get_indications_from_settings(&SRC_TRANSPOSE))
-    });
-}
-
-fn get_indications_from_settings_2(c: &mut Criterion) {
-    let ind_without_bf =
-        get_indicators_from_settings_without_bf(&SETTINGS_2, &FUNCS_EXTRACT_ARGS());
-    let indicators_gw = IndicatorsGateway::new(
-        get_indicators_from_settings(
-            &SETTINGS_2,
-            &FUNCS_EXTRACT_ARGS(),
-            &SRC_TRANSPOSE,
-            &ind_without_bf,
-        ),
-        &ind_without_bf,
-        &SETTINGS_2,
-    );
+    ]);
+    let ind_without_bf = get_indicators_from_settings_without_bf(&s, &FUNCS_EXTRACT_ARGS());
+    let ind_bf =
+        get_indicators_from_settings(&s, &FUNCS_EXTRACT_ARGS(), &SRC_TRANSPOSE, &ind_without_bf);
+    let indicators_gw = IndicatorsGateway::new(&ind_bf, &ind_without_bf, &s);
     c.bench_function("get_indications_from_settings_2", |b| {
         b.iter(|| indicators_gw.get_indications_from_settings(&SRC_TRANSPOSE))
     });

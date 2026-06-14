@@ -1,11 +1,10 @@
 use std::sync::LazyLock;
 
 use bc_indicators::indicators::ready_imports::*;
-use bc_indicators::indicators::repeat::REPEAT;
 use bc_indicators::indicators::{
     avg::AVG, div::DIV, ema::EMA, minus::MINUS, mm_scaler::MM_SCALER, mult::MULT,
     osc_mult::OSC_MULT, percent::PERCENT, plus::PLUS, profit_factor::PROFIT_FACTOR, rem::REM,
-    rma::RMA, rsi::RSI, sma::SMA, trend_ma::TREND_MA,
+    repeat::REPEAT, rma::RMA, rsi::RSI, sma::SMA, trend_ma::TREND_MA,
 };
 use bc_utils_lg::structs::settings::{SETTINGS_IND, SETTINGS_INDS, SETTINGS_USED_SRC};
 use bc_utils_lg::types::maps::MAP;
@@ -119,9 +118,13 @@ pub static FUNCS_EXTRACT_ARGS: LazyLock<
                 "osc_mult",
                 (|v: &SETTINGS_IND| {
                     let mut df = OSC_MULT::default();
-                    df.set_diff_short(*v.kwargs_f64.get("diff_short").unwrap_or(&df.diff_short));
-                    df.set_diff_long(*v.kwargs_f64.get("diff_long").unwrap_or(&df.diff_long));
-                    df.set_max_v(*v.kwargs_f64.get("max_v").unwrap_or(&df.max_v));
+                    df.set_th_short(
+                        *v.kwargs_f64
+                            .get("th_shset_th_short")
+                            .unwrap_or(&df.th_short),
+                    );
+                    df.set_th_long(*v.kwargs_f64.get("th_set_th_long").unwrap_or(&df.th_long));
+                    df.set_max_value(*v.kwargs_f64.get("max_value").unwrap_or(&df.max_value));
                     Box::new(df) as Box<dyn Indicator>
                 }) as fn(&SETTINGS_IND) -> Box<dyn Indicator>,
             ),
@@ -200,10 +203,10 @@ pub fn get_in_from_settings<'a>(
             ),
         ));
     }
-    if order_used.len() != 0 {
+    if !order_used.is_empty() {
         res = order_used.iter().map(|i| res[*i].clone()).collect();
     }
-    if res.len() != 0 {
+    if !res.is_empty() {
         let min_len = res
             .iter()
             .map(|v| v.len())
@@ -238,13 +241,7 @@ pub fn get_indicators_from_settings<'a>(
     funcs_extract_args: &FxHashMap<&'a str, fn(&SETTINGS_IND) -> Box<dyn Indicator>>,
     in_: &SRC_TRANSPOSE,
     map_indicators: &MAP<&'a str, Box<dyn Indicator>>,
-) -> MAP<
-    &'a str,
-    (
-        RefCell<Vec<MAP<&'static str, Vec<f64>>>>,
-        Box<dyn Indicator>,
-    ),
-> {
+) -> MAP<&'a str, (RefCell<Vec<MAP<&'a str, Vec<f64>>>>, Box<dyn Indicator>)> {
     settings
         .iter()
         .map(|(indicator_name, settings_indicator)| {

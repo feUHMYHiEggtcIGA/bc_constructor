@@ -1,35 +1,20 @@
-use std::cell::RefCell;
-
-use bc_indicators::indicators::ready_imports::Indicator;
+use bc_indicators::indicators::ready_imports::{BF_INDICATOR, Indicator};
 use bc_utils_lg::{
     structs::settings::SETTINGS_INDS,
     types::{maps::MAP, structures::SRC_TRANSPOSE},
 };
-use rustc_hash::FxHashMap;
 
 use crate::map::indicators::get_in_from_settings;
 
 pub struct IndicatorsGateway<'a> {
-    pub indicators: MAP<
-        &'a str,
-        (
-            RefCell<Vec<FxHashMap<&'static str, Vec<f64>>>>,
-            Box<dyn Indicator>,
-        ),
-    >,
+    pub indicators: &'a MAP<&'a str, (BF_INDICATOR<'a>, Box<dyn Indicator>)>,
     pub indicators_without_bf: &'a MAP<&'a str, Box<dyn Indicator>>,
     pub settings: &'a SETTINGS_INDS,
 }
 
 impl<'a> IndicatorsGateway<'a> {
     pub fn new(
-        indicators: MAP<
-            &'a str,
-            (
-                RefCell<Vec<FxHashMap<&'static str, Vec<f64>>>>,
-                Box<dyn Indicator>,
-            ),
-        >,
+        indicators: &'a MAP<&'a str, (BF_INDICATOR<'a>, Box<dyn Indicator>)>,
         indicators_without_bf: &'a MAP<&'a str, Box<dyn Indicator>>,
         settings: &'a SETTINGS_INDS,
     ) -> Self {

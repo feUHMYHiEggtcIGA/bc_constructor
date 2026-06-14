@@ -7,7 +7,7 @@ use bc_constructor::map::indicators::*;
 use std::any::Any;
 
 #[test]
-fn indicators_from_settings_res_1() {
+fn indicators_from_settings_without_bf_res_1() {
     let settings = SETTINGS_INDS::from_iter([(
         "rsi_1".to_string(),
         SETTINGS_IND {
